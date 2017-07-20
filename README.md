@@ -7,3 +7,6 @@ This project use vue-cli sample template more @ [https://github.com/vuejs-templa
  1. vue init sample <my-project>
  2. npm -g live-server
  3. live server
+
+### Live demo links
+1. Template [https://bl.ocks.org/ravi4j/1adceb6be01daed5ba01fde6a09813d1]
