@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Welcome to Vue</title>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="controls">
+            <h1> Controls goes here !!!</h1>
+        </div>
+        <svg v-bind:width="settings.width" v-bind:height="settings.height">
+            <circle cx="40" cy="60" r="10"></circle>
+            <circle cx="80" cy="60" r="10"></circle>
+            <circle cx="120" cy="60" r="10"></circle>
+        </svg>
+    </div>
+    <script type="text/javascript">
+        new Vue({
+            el: "#app",
+            data: function() {
+                return {
+                    settings: {
+                        csv: null,
+                        strokeColor: "#29B5FF",
+                        width: 960,
+                        height: 2000
+                    }
+                };
+            },
+            mounted: function() {
+                var that = this;
+                d3.csv("data/template.csv",
+                    function(error, data) {
+                        if (error) throw error;
+                        that.csv = data;
+                    }
+                );
+            },
+            computed: {
+
+            },
+            methods: {
+
+            }
+
+        });
+    </script>
+</body>
