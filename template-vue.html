@@ -11,7 +11,7 @@
             height: 100%;
             font-family: monospace;
         }
-        
+
         .controls {
             position: fixed;
             top: 16px;
@@ -21,11 +21,16 @@
             display: flex;
             flex-direction: column;
         }
-        
+
+        .svg-container {
+            display: table;
+            border: 1px solid gray;
+        }
+
         .controls>*+* {
             margin-top: 1rem;
         }
-        
+
         label {
             display: block;
         }
@@ -37,55 +42,101 @@
         <div class="controls">
             <div>
                 <label>Adjust width</label>
-                <input type="range" v-model="settings.width" :min="circle.d" max="960" />
+                <input type="range" v-model="settings.width" min="0" max="960" />
             </div>
             <div>
                 <label>Adjust height</label>
-                <input type="range" v-model="settings.height" :min="circle.d" max="1000" />
+                <input type="range" v-model="settings.height" min="0" max="600" />
             </div>
             <div>
                 <label>Stroke color</label>
                 <input type="color" v-model="settings.strokeColor" />
             </div>
+            <button v-on:click="randomSelect">Random Select</button>
         </div>
-        <svg v-bind:width="settings.width" v-bind:height="settings.height">
-            <circle :cx="circle.cx" :cy="circle.cy" :r="circle.r" v-bind:fill="settings.strokeColor"></circle>
-        </svg>
+        <div class="svg-container">
+            <svg v-bind:width="settings.width" v-bind:height="settings.height" :viewBox="viewport">
+                <circle :cx="circle.cx" :cy="circle.cy" :r="circle.r" v-bind:fill="settings.strokeColor"></circle>
+                <circle v-for="c in circles" :cx="c.x" :cy="c.y" :r="c.r" v-bind:fill="settings.strokeColor"></circle>
+            </svg>
+        </div>
     </div>
     <script type="text/javascript">
         new Vue({
             el: "#app",
-            data: function() {
+            data: function () {
                 return {
+                    csv: null,
                     settings: {
-                        csv: null,
                         strokeColor: "#29B5FF",
                         width: 960,
-                        height: 1000
+                        height: 600
                     }
                 };
             },
-            mounted: function() {
+            mounted: function () {
                 var that = this;
                 d3.csv("template-data.csv",
-                    function(error, data) {
+                    function (error, data) {
                         if (error) throw error;
                         that.csv = data;
                     }
                 );
             },
             computed: {
-                circle: function() {
+                viewport: function () {
+                    d3.select('svg')
+                        .attr("view-box", "0 0 " + this.settings.width + " " + this.settings.height)
+                        .attr("preserveAspectRatio", "xMinYMin meet");
+                },
+                circle: function () {
                     return {
                         cx: this.settings.width / 2,
                         cy: this.settings.height / 2,
                         r: 50,
                         d: 100
                     }
+                },
+                circles: function () {
+                    if (this.csv) {
+                        let m, n;
+                        this.csv.map(function (d) {
+                            m = d.m;
+                            n = d.n;
+                        });
+                        let cdata = [];
+                        for (let i = 0; i < m; i++) {
+                            for (let j = 0; j < n; j++) {
+                                let x1 = 10 * i;
+                                let y1 = 10 * j;
+                                if (x1 < 960 && y1 < 600) {
+                                    cdata.push({
+                                        x: x1,
+                                        y: y1,
+                                        r: 5
+                                    });
+                                }
+                            }
+                        }
+                        return cdata;
+                    }
                 }
             },
             methods: {
+                randomSelect: function () {
+                    let svg = d3.select("svg");
+                    let circles = svg.selectAll("circle");
+                    //let selected_point = circles._groups[0][1000];
+                    let selected_point = d3.select(circles._groups[0][10])
+                    console.log(selected_point.attr("cx"), selected_point.attr("cy"), selected_point.attr("fill"), selected_point.attr("r"));
+                    svg.append("circle")
+                        .attr("class", "selected_point_fill")
+                        .attr("cx", 400)
+                        .attr("cy", 400)
+                        .attr("r", 50)
+                        .style("fill", "#FFFF00");
 
+                }
             }
 
         });
