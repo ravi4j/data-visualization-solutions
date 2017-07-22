@@ -5,7 +5,7 @@ This project use vue-cli sample template more @ [https://github.com/vuejs-templa
 
 ### Data Visualization using vue.js and d3.js
  1. vue init sample <my-project>
- 2. npm -g live-server
+ 2. npm install -g live-server
  3. live server
 
 ### Live demo links
