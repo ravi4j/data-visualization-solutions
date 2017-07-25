@@ -79,9 +79,6 @@
                     }
                 };
             },
-            created: function () {
-                console.log("created");
-            },
             mounted: function () {
                 var that = this;
                 console.log("mounted");
@@ -149,11 +146,7 @@
                         .attr("cx", function (d) { return d.x; })
                         .attr("cy", function (d) { return d.y; });
                 });
-            },
-            methods: {
-
             }
-
         });
     </script>
 </body>
