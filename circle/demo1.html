@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Welcome to Vue</title>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: monospace;
+        }
+        
+        .controls {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            background: #f8f8f8;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .svg-container {
+            display: table;
+            border: 1px solid #f8f8f8;
+            box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+        }
+        
+        .controls>*+* {
+            margin-top: 1rem;
+        }
+        
+        label {
+            display: block;
+        }
+        
+        .links line {
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
+        
+        .nodes circle {
+            stroke: #fff;
+            stroke-width: 1.5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="controls">
+            <div>
+                <label>Adjust width</label>
+                <input type="range" v-model="settings.width" min="200" max="960" />
+            </div>
+            <div>
+                <label>Adjust height</label>
+                <input type="range" v-model="settings.height" min="200" max="600" />
+            </div>
+        </div>
+        <div id="container" class="svg-container">
+            <svg :width="settings.width" :height="settings.height" :viewBox="vport" preserveAspectRatio="xMinYMin meet">
+                <g class="circle-group" :transform="gTransition">
+                    <circle :r="radius" fill="yellow" stroke="orange" stroke-width="2" />
+                     <circle cx=110  cy="110" r="2" fill="yellow" stroke="orange" stroke-width="2" />
+                </g>
+            </svg>
+        </div>
+    </div>
+    <script type="text/javascript">
+        new Vue({
+            el: "#app",
+            data: function() {
+                var margin = {
+                    top: -5,
+                    right: -5,
+                    bottom: -5,
+                    left: -5
+                };
+
+                var w = container.width,
+                    h = container.height;
+                console.log(w, h);
+                return {
+                    graph: null,
+                    svg: null,
+                    settings: {
+                        strokeColor: "#29B5FF",
+                        width: 960 - margin.left - margin.right,
+                        height: 600 - margin.top - margin.bottom,
+                        margin: margin
+                    }
+                };
+            },
+            mounted: function() {
+
+            },
+            computed: {
+                gTransition: function() {
+                    var w = this.settings.width / 2;
+                    var h = this.settings.height / 2;
+                    return "translate( " + w + " , " + h + ")";
+                },
+                vport: function() {
+                    return "0 0 " + this.settings.width + " " + this.settings.height;
+                },
+                radius: function() {
+                    /* var w = Math.abs(this.settings.width),
+                         h = Math.abs(this.settings.height),
+                         radius = 0;
+                     if (w < h) {
+                         radius = 2 * w / 5;
+                     } else {
+                         radius = 2 * h / 5;
+                     }
+                     return radius; */
+                    return 100;
+                }
+
+            }
+        });
+    </script>
+</body>
