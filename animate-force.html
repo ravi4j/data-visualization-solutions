@@ -102,7 +102,9 @@
                             .data(that.graph.nodes)
                             .enter().append("circle")
                             .attr("r", 20)
-                            .attr("fill", "#ffff00")
+                            .attr("fill", function (d ,i) {
+                                return that.color(i);
+                            })
                             .call(d3.drag()
                                 .on("start", function dragstarted(d) {
                                     if (!d3.event.active) that.simulation.alphaTarget(0.3).restart();
